@@ -37,7 +37,16 @@ public class Addition {
                 input2.removeFirst();
             }
         }
+        return output;
+    }
 
+    public List<Integer> getDigitsFromNum(int num) {
+        List<Integer> output = new LinkedList<>();
+        while (num != 0) {
+            int reminder = num % 10;
+            ((LinkedList<Integer>) output).addFirst(reminder);
+            num = num / 10;
+        }
         return output;
     }
 }

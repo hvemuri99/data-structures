@@ -48,7 +48,8 @@ public class BinaryTree {
 
     }
 
-    public void getTreeByPreOrderAndInOrder(String preOrder, String inOrder) throws Exception {
+    public void getTreeByPreOrderAndInOrder(String preOrder, String inOrder)
+            throws Exception {
 
         if (preOrder.length() != inOrder.length()) {
             throw new Exception("Invalid input");
@@ -122,12 +123,53 @@ public class BinaryTree {
         getTreeByPreOrderAndInOrder(preOrder, inOrder);
     }
 
-    private String removeChar(String input, int[] indexs) {
-        StringBuilder sb = new StringBuilder(input);
-        for (int index = 0; index <= indexs.length; index++) {
-            sb.deleteCharAt(index);
+    public void delete(int deleteData) throws Exception {
+        if (root == null) {
+            throw new Exception("Invalid operation");
         }
-        return sb.toString();
+
+        TreeNode deleteNode = getNodeX(deleteData);
+        TreeNode parent = null;
+        if (deleteNode.getLeftChild() == null && deleteNode.getRightChild() == null) {
+            parent = deleteNode.getParent();
+        }
+        TreeNode nextNode = root;
+        while (nextNode != null) {
+            if (nextNode.getData() == parent.getData()) {
+                break;
+            }
+            if (parent.getData() < nextNode.getData()) {
+                nextNode = nextNode.getLeftChild();
+            }
+            if (parent.getData() > nextNode.getData()) {
+                nextNode = nextNode.getRightChild();
+            }
+        }
+        if (deleteNode.getRightChild() == null && deleteNode.getLeftChild() == null) {
+            replaceNode(deleteData, nextNode, null);
+        }
+
+        if (deleteNode.getLeftChild() != null || deleteNode.getRightChild() != null) {
+            TreeNode parentOfParent = nextNode.getParent();
+            if (deleteNode.getLeftChild() != null) {
+                replaceNode(deleteData, parentOfParent, deleteNode.getLeftChild());
+            }
+            if (deleteNode.getRightChild() != null) {
+                replaceNode(deleteData, parentOfParent, deleteNode.getRightChild());
+            }
+            nextNode.setParent(null);
+        }
+    }
+
+    private void replaceNode(int deleteData, TreeNode mainNode, TreeNode replaceNode) {
+        TreeNode rightChild = mainNode.getRightChild();
+        TreeNode leftChild = mainNode.getLeftChild();
+        if (rightChild != null && rightChild.getData() == deleteData) {
+            mainNode.setRightChild(replaceNode);
+        }
+        if (leftChild != null && leftChild.getData() == deleteData) {
+            mainNode.setLeftChild(replaceNode);
+        }
     }
 
     public int getSuccessorInBT(int x) throws Exception {
@@ -140,10 +182,12 @@ public class BinaryTree {
         if (nodeX.getLeftChild() == null && nodeX.getRightChild() == null) {
             parentNode = nodeX.getParent();
         }
+
         TreeNode nextNode = null;
         if (nodeX.getRightChild() != null) {
             nextNode = nodeX.getRightChild();
         }
+
         int smallestNode = 0;
         while (nextNode != null) {
             TreeNode leftNode = nextNode.getLeftChild();
@@ -167,6 +211,14 @@ public class BinaryTree {
             parentNode = parentNode.getParent();
         }
         return smallestNode;
+    }
+
+    private String removeChar(String input, int[] indexs) {
+        StringBuilder sb = new StringBuilder(input);
+        for (int index = 0; index <= indexs.length; index++) {
+            sb.deleteCharAt(index);
+        }
+        return sb.toString();
     }
 
     private TreeNode getNodeX(int x) {
