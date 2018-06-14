@@ -12,6 +12,7 @@ public class HeapSort {
         int i = 0;
         int j = 1;
         int count = 0;
+        int max = findMaxElement(input, length);
         while (i < length && j < length) {
             int temp1 = input[i];
             int temp2 = input[j];
@@ -31,6 +32,9 @@ public class HeapSort {
                 count++;
             }
         }
+        if (input[0] != max) {
+            formMaxHeap(input, length);
+        }
     }
 
     private void swap(int[] input, int length) {
@@ -44,5 +48,15 @@ public class HeapSort {
             formMaxHeap(input, length);
             swap(input, length);
         }
+    }
+
+    private int findMaxElement(int[] input, int length) {
+        int max = input[0];
+        for (int i = 0; i < length; i++) {
+            if (input[i] > max) {
+                max = input[i];
+            }
+        }
+        return max;
     }
 }
